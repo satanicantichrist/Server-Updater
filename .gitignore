@@ -2,3 +2,5 @@ bruno/*
 server.jar
 version.json
 *.swp
+*.deb
+packages/
