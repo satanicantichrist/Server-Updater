@@ -45,7 +45,7 @@ then
 	fi
 
 	echo New version of Paper found, downloading $nprversion...
-	curl -s -A "$useragent" --progress-bar https://api.papermc.io/v2/projects/paper/versions/$mcversion/builds/$nprversion/downloads/paper-$mcversion-$nprversion.jar -o ./server.jar
+	curl -A "$useragent" --progress-bar https://api.papermc.io/v2/projects/paper/versions/$mcversion/builds/$nprversion/downloads/paper-$mcversion-$nprversion.jar -o ./server.jar
 	echo "{\"minecraft\": \""$mcversion"\",\"paper\": "$nprversion"}" > version.json
 	exit 0
 else
@@ -61,7 +61,7 @@ else
     fi
 
 	echo Downloading Paper $nprversion...
-	curl -s -A "$useragent" --progress-bar https://api.papermc.io/v2/projects/paper/versions/$mcversion/builds/$nprversion/downloads/paper-$mcversion-$nprversion.jar -o ./server.jar
+	curl -A "$useragent" --progress-bar https://api.papermc.io/v2/projects/paper/versions/$mcversion/builds/$nprversion/downloads/paper-$mcversion-$nprversion.jar -o ./server.jar
 	echo "{\"minecraft\": \""$mcversion"\",\"paper\": "$nprversion"}" > version.json
 	exit 0
 fi
