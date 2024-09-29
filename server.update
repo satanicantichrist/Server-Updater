@@ -2,6 +2,27 @@
 set -e
 useragent="https://github.com/satanicantichrist/Server-Updater (satanciantichrist1@protonmail.com)"
 
+if [[ $1 == "ls" ]]
+	then
+		if [[ $2 == "" ]]
+			then
+				echo "To list avaible Minecraft version use ls mc"
+				echo "To list avaible Paper versions use ls mc <Minecraft version>"
+				exit 0
+			fi
+		if [ $2 == "mc" ] -a [[ $3 == "" ]]
+			then
+				curl -s -A "$useragent" https://api.papermc.io/v2/projects/paper/ | jq -r ".versions.[]" | while read -r mc; do echo $mc; done
+				exit 0
+			fi
+		if [[ $3 != "" ]]
+			then
+				curl -s -A "$useragent" https://api.papermc.io/v2/projects/paper/versions/$3/builds | jq -r ".builds.[]" | jq -r ".build" |  while read -r build; do echo $build; done
+				exit 0
+			fi
+			exit 0
+	fi
+
 if [[ $1 == "" ]]
 then
 	if ! [ -e version.json ]
@@ -23,16 +44,23 @@ then
 		exit 0
 	fi
 
-	echo New version of Paper found, downloading...
+	echo New version of Paper found, downloading $nprversion...
 	curl -s -A "$useragent" --progress-bar https://api.papermc.io/v2/projects/paper/versions/$mcversion/builds/$nprversion/downloads/paper-$mcversion-$nprversion.jar -o ./server.jar
 	echo "{\"minecraft\": \""$mcversion"\",\"paper\": "$nprversion"}" > version.json
 	exit 0
 else
 	mcversion=$1
+	paperversion=$2
 	echo Fetching newest Paper version "for" Minecraft $mcversion...
 	paperdata=$(curl -s -A "$useragent" https://api.papermc.io/v2/projects/paper/versions/$mcversion/builds)
-	nprversion=$(echo $paperdata | jq "[.builds.[].build] | max")
-	echo Downloading Paper...
+	if [[ $paperversion == "" ]]
+		then
+			nprversion=$(echo $paperdata | jq "[.builds.[].build] | max")
+    else
+		nprversion=$paperversion
+    fi
+
+	echo Downloading Paper $nprversion...
 	curl -s -A "$useragent" --progress-bar https://api.papermc.io/v2/projects/paper/versions/$mcversion/builds/$nprversion/downloads/paper-$mcversion-$nprversion.jar -o ./server.jar
 	echo "{\"minecraft\": \""$mcversion"\",\"paper\": "$nprversion"}" > version.json
 	exit 0
