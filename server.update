@@ -10,7 +10,7 @@ if [[ $1 == "ls" ]]
 				echo "To list avaible Paper versions use ls mc <Minecraft version>"
 				exit 0
 			fi
-		if [ $2 == "mc" ] -a [[ $3 == "" ]]
+			if [[ $2 == "mc" ]] && [[ $3 == "" ]]
 			then
 				curl -s -A "$useragent" https://api.papermc.io/v2/projects/paper/ | jq -r ".versions.[]" | while read -r mc; do echo $mc; done
 				exit 0
